@@ -9,145 +9,152 @@ import java.util.ArrayList;
 import java.sql.ResultSet;
 
 public class LivroDAO {
-    public void salvarLivro(Livro livro) {
-        String sql = "INSERT INTO livro (titulo, ano_publicacao, isbn, status, id_autor) VALUES (?, ?, ?, ?, ?)";
+	public void salvarLivro(Livro livro) {
+		System.out.println("=== salvarLivro CHAMADO ===");
+		System.out.println("Titulo: " + livro.getTitulo());
+		System.out.println("Ano: " + livro.getAnoPublicacao());
+		System.out.println("ISBN: " + livro.getIsbn());
+		System.out.println("Status: " + livro.getStatus());
+		System.out.println("ID Autor: " + livro.getIdAutor());
 
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        try {
-            conn = ConnectionFactory.createConnection();
-            stmt = conn.prepareStatement(sql);
+		String sql = "INSERT INTO livro (titulo, ano_publicacao, isbn, status, id_autor) VALUES (?, ?, ?, ?, ?)";
 
-            stmt.setString(1, livro.getTitulo());
-            stmt.setInt(2, livro.getAnoPublicacao());
-            stmt.setString(3, livro.getIsbn());
-            stmt.setString(4, livro.getStatus().getValor());
-            stmt.setInt(5, livro.getIdAutor());
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		try {
+			conn = ConnectionFactory.createConnection();
+			stmt = conn.prepareStatement(sql);
 
-            stmt.execute();
-            System.out.println("Livro salvo com sucesso.");
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (stmt != null) {
-                    stmt.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
+			stmt.setString(1, livro.getTitulo());
+			stmt.setInt(2, livro.getAnoPublicacao());
+			stmt.setString(3, livro.getIsbn());
+			stmt.setString(4, livro.getStatus().getValor());
+			stmt.setInt(5, livro.getIdAutor());
 
-    public List<Livro> listarLivros() {
-        String sql = "SELECT l.*, a AS nome_autor FROM livro l " +
-                    "INNER JOIN autor a ON l.id_autor = a.id_autor";
-        List<Livro> livros = new ArrayList<>();
-        
-        Connection conn = null;
-        PreparedStatement stmt = null;
-        ResultSet rset = null;
+			stmt.execute();
+			System.out.println("Livro salvo com sucesso.");
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (stmt != null) {
+					stmt.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
-        try {
-            conn = ConnectionFactory.createConnection();
-            stmt = conn.prepareStatement(sql);
-            rset = stmt.executeQuery();
+	public List<Livro> listarLivros() {
+		String sql = "SELECT l.*, a.nome AS nome_autor FROM livro l INNER JOIN autor a ON l.id_autor = a.id_autor";
 
-            while (rset.next()) {
-                Livro livro = new Livro();
-                livro.setId(rset.getInt("id_livro"));
-                livro.setTitulo(rset.getString("titulo"));
-                livro.setAnoPublicacao(rset.getInt("ano_publicacao"));
-                livro.setIsbn(rset.getString("isbn"));
-                livro.setStatus(Livro.StatusLivro.valueOf(rset.getString("status")));
-                livro.setIdAutor(rset.getInt("id_autor"));
-                livros.add(livro);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (rset != null) {
-                    rset.close();
-                }
-                if (stmt != null) {
-                    stmt.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return livros;
-    }
+		List<Livro> livros = new ArrayList<>();
 
-    public void atualizarLivro(Livro livro) {
-        String sql = "UPDATE livro SET titulo = ?, ano_publicacao = ?, isbn = ?, status = ?, id_autor = ? WHERE id_livro = ?";
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rset = null;
 
-        Connection conn = null;
-        PreparedStatement stmt = null;
+		try {
+			conn = ConnectionFactory.createConnection();
+			stmt = conn.prepareStatement(sql);
+			rset = stmt.executeQuery();
 
-        try {
-            conn = ConnectionFactory.createConnection();
-            stmt = conn.prepareStatement(sql);
+			while (rset.next()) {
+				Livro livro = new Livro();
+				livro.setId(rset.getInt("id_livro"));
+				livro.setTitulo(rset.getString("titulo"));
+				livro.setAnoPublicacao(rset.getInt("ano_publicacao"));
+				livro.setIsbn(rset.getString("isbn"));
+				livro.setStatus(Livro.StatusLivro.fromString(rset.getString("status")));
+				livro.setIdAutor(rset.getInt("id_autor"));
+				livros.add(livro);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rset != null) {
+					rset.close();
+				}
+				if (stmt != null) {
+					stmt.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return livros;
+	}
 
-            stmt.setString(1, livro.getTitulo());
-            stmt.setInt(2, livro.getAnoPublicacao());
-            stmt.setString(3, livro.getIsbn());
-            stmt.setString(4, livro.getStatus().getValor());
-            stmt.setInt(5, livro.getIdAutor());
-            stmt.setInt(6, livro.getId());
+	public void atualizarLivro(Livro livro) {
+		String sql = "UPDATE livro SET titulo = ?, ano_publicacao = ?, isbn = ?, status = ?, id_autor = ? WHERE id_livro = ?";
 
-            stmt.executeUpdate();
-            System.out.println("Livro atualizado com sucesso.");
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (stmt != null) {
-                    stmt.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
+		Connection conn = null;
+		PreparedStatement stmt = null;
 
-    public void deletarLivro(int id) {
-        String sql = "DELETE FROM livro WHERE id_livro = ?";
+		try {
+			conn = ConnectionFactory.createConnection();
+			stmt = conn.prepareStatement(sql);
 
-        Connection conn = null;
-        PreparedStatement stmt = null;
+			stmt.setString(1, livro.getTitulo());
+			stmt.setInt(2, livro.getAnoPublicacao());
+			stmt.setString(3, livro.getIsbn());
+			stmt.setString(4, livro.getStatus().getValor());
+			stmt.setInt(5, livro.getIdAutor());
+			stmt.setInt(6, livro.getId());
 
-        try {
-            conn = ConnectionFactory.createConnection();
-            stmt = conn.prepareStatement(sql);
+			stmt.executeUpdate();
+			System.out.println("Livro atualizado com sucesso.");
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (stmt != null) {
+					stmt.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
-            stmt.setInt(1, id);
+	public void deletarLivro(int id) {
+		String sql = "DELETE FROM livro WHERE id_livro = ?";
 
-            stmt.executeUpdate();
-            System.out.println("Livro deletado com sucesso.");
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (stmt != null) {
-                    stmt.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
+		Connection conn = null;
+		PreparedStatement stmt = null;
+
+		try {
+			conn = ConnectionFactory.createConnection();
+			stmt = conn.prepareStatement(sql);
+
+			stmt.setInt(1, id);
+
+			stmt.executeUpdate();
+			System.out.println("Livro deletado com sucesso.");
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (stmt != null) {
+					stmt.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
 }

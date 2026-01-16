@@ -71,6 +71,7 @@ public class LivroDAO {
 				livro.setIsbn(rset.getString("isbn"));
 				livro.setStatus(Livro.StatusLivro.fromString(rset.getString("status")));
 				livro.setIdAutor(rset.getInt("id_autor"));
+				livro.setNomeAutor(rset.getString("nome_autor"));
 				livros.add(livro);
 			}
 		} catch (Exception e) {

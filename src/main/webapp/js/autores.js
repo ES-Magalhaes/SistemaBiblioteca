@@ -16,23 +16,38 @@ function carregarAutores() {
 
       autores.forEach((autor) => {
         tabela.innerHTML += `
-			<tr>
-				<td>${autor.id}</td>
-				<td>${autor.nome}</td>
-				<td>${autor.nacionalidade}</td>
-				<td>${autor.estilo}</td>
-				<td>
-          <button onclick="prepararEdicao(${autor.id}, '${autor.nome}', '${autor.nacionalidade}', '${autor.estilo}')">
-            Editar
-          </button>
-          <button onclick="excluirAutor(${autor.id})">
-            Excluir
-          </button>
-        </td>
-			</tr>
-			`;
+          <tr>
+            <td>${autor.id}</td>
+            <td>${autor.nome}</td>
+            <td>${autor.nacionalidade}</td>
+            <td>${autor.estilo}</td>
+            <td class="d-flex gap-2">
+              <button
+                class="btn btn-warning btn-sm"
+                title="Editar"
+                onclick="prepararEdicao(
+                  ${autor.id},
+                  '${autor.nome}',
+                  '${autor.nacionalidade}',
+                  '${autor.estilo}'
+                )"
+              >
+                <i class="bi bi-pencil-square"></i>Editar
+              </button>
+
+              <button
+                class="btn btn-danger btn-sm"
+                title="Excluir"
+                onclick="excluirAutor(${autor.id})"
+              >
+                <i class="bi bi-trash"></i>Excluir
+              </button>
+            </td>
+          </tr>
+        `;
       });
-    });
+    })
+    .catch((error) => console.error("Erro ao carregar autores:", error));
 }
 
 form.addEventListener("submit", (e) => {
@@ -54,9 +69,7 @@ form.addEventListener("submit", (e) => {
 function cadastrarAutor(autor) {
   fetch(API_URL, {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(autor),
   }).then(() => {
     form.reset();
@@ -74,9 +87,7 @@ function prepararEdicao(id, nome, nacionalidade, estilo) {
 function atualizarAutor(id, autor) {
   fetch(`${API_URL}?id=${id}`, {
     method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(autor),
   }).then(() => {
     cancelarEdicao();
@@ -84,16 +95,17 @@ function atualizarAutor(id, autor) {
   });
 }
 
+function excluirAutor(id) {
+  if (!confirm("Tem certeza que deseja excluir este autor?")) return;
+
+  fetch(`${API_URL}?id=${id}`, { method: "DELETE" }).then(() =>
+    carregarAutores(),
+  );
+}
+
 function cancelarEdicao() {
   inputId.value = "";
   form.reset();
-}
-
-function excluirAutor(id) {
-  if (!confirm("Tem certeza que deseja excluir este autor?")) return;
-  fetch(`${API_URL}?id=${id}`, { method: "DELETE" }).then(() =>
-    carregarAutores()
-  );
 }
 
 carregarAutores();

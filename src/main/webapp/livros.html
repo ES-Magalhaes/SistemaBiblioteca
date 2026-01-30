@@ -1,57 +1,135 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-br">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Livros</title>
-  <link rel="stylesheet" href="css/style.css" />
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard • Livros</title>
 
-  <h1>Livros</h1>
+    <!-- Bootstrap -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    />
+    <!-- Bootstrap Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
+    />
 
-  <table border="1">
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Título</th>
-        <th>Ano</th>
-        <th>ISBN</th>
-        <th>Status</th>
-        <th>Autor</th>
-        <th>Ações</th>
-      </tr>
-    </thead>
-    <tbody id="tabela-livros"></tbody>
-  </table>
+    <!-- CSS custom -->
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
 
-  <h2>Novo Livro</h2>
+  <body class="bg-dark-purple">
+    <div class="d-flex">
+      <!-- SIDEBAR -->
+      <aside class="sidebar p-4">
+        <h4 class="mb-4 text-white"><i class="bi bi-book"></i> Biblioteca</h4>
 
-  <form id="form-livro">
-    <input type="hidden" id="livro-id" />
+        <ul class="nav flex-column gap-2">
+          <li class="nav-item">
+            <a href="autores.html" class="nav-link text-light">
+              <i class="bi bi-pen"></i> Autores
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="livros.html" class="nav-link active">
+              <i class="bi bi-journal-bookmark"></i> Livros
+            </a>
+          </li>
+        </ul>
+      </aside>
 
-    <label>Título:</label>
-    <input type="text" id="titulo" required />
+      <!-- CONTEÚDO PRINCIPAL -->
+      <main class="content flex-fill p-4">
+        <h1 class="mb-4">Livros</h1>
 
-    <label>Ano de Publicação:</label>
-    <input type="number" id="ano-publicacao" required />
+        <!-- TABELA -->
+        <div class="card mb-5">
+          <div class="card-body">
+            <table
+              class="table table-dark table-hover table-striped rounded-3 overflow-hidden"
+            >
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Título</th>
+                  <th>Ano</th>
+                  <th>ISBN</th>
+                  <th>Status</th>
+                  <th>Autor</th>
+                  <th>Ações</th>
+                </tr>
+              </thead>
+              <tbody id="tabela-livros"></tbody>
+            </table>
+          </div>
+        </div>
 
-    <label>ISBN:</label>
-    <input type="text" id="isbn" required />
+        <!-- FORMULÁRIO -->
+        <div class="card">
+          <div class="card-body">
+            <h4 class="mb-4" style="color: #c7c7d1">Novo / Editar Livro</h4>
 
-    <label>Status:</label>
-    <select id="status">
-      <option value="DISPONIVEL">Disponível</option>
-      <option value="INDISPONIVEL">Indisponível</option>
-    </select>
+            <form id="form-livro">
+              <input type="hidden" id="livro-id" />
 
-    <label>Autor:</label>
-    <select id="autor"></select>
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Título</label>
+                  <input
+                    type="text"
+                    id="titulo"
+                    class="form-control"
+                    required
+                  />
+                </div>
 
-    <button type="submit">Salvar</button>
-    <button type="button" onclick="cancelarEdit()">Cancelar</button>
-  </form>
+                <div class="col-md-3 mb-3">
+                  <label class="form-label">Ano</label>
+                  <input
+                    type="number"
+                    id="ano-publicacao"
+                    class="form-control"
+                    required
+                  />
+                </div>
 
-  <script src="js/livros.js"></script>
-</body>
+                <div class="col-md-3 mb-3">
+                  <label class="form-label">Status</label>
+                  <select id="status" class="form-select">
+                    <option value="DISPONIVEL">Disponível</option>
+                    <option value="INDISPONIVEL">Indisponível</option>
+                  </select>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">ISBN</label>
+                  <input type="text" id="isbn" class="form-control" />
+                </div>
+
+                <div class="col-md-6 mb-3">
+                  <label class="form-label">Autor</label>
+                  <select id="autor" class="form-select"></select>
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-success">
+                <i class="bi bi-check-circle"></i> Salvar
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-light ms-2"
+                onclick="cancelarEdicao()"
+              >
+                Cancelar
+              </button>
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="js/livros.js"></script>
+  </body>
 </html>

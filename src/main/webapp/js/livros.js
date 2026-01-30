@@ -27,21 +27,45 @@ function carregarLivros() {
             <td>${livro.status}</td>
             <td>${livro.nomeAutor}</td>
             <td>
-              <button onclick="prepararEdicao(
-                ${livro.id},
-                '${livro.titulo}',
-                ${livro.anoPublicacao ?? "null"},
-                '${livro.isbn ?? ""}',
-                '${livro.status}',
-                ${livro.idAutor}
-              )">Editar</button>
+              <button class="btn btn-sm btn-warning"
+                onclick="editarLivro(${livro.id})">
+                <i class="bi bi-pencil-square"></i>Editar
+              </button>
 
-              <button onclick="excluirLivro(${livro.id})">Excluir</button>
+              <button class="btn btn-sm btn-danger"
+                onclick="excluirLivro(${livro.id})">
+                <i class="bi bi-trash"></i>Excluir
+              </button>
             </td>
           </tr>
         `;
       });
+    })
+    .catch((err) => console.error("Erro ao carregar livros:", err));
+}
+
+function editarLivro(id) {
+  fetch(`${API_URL}?id=${id}`)
+    .then((res) => res.json())
+    .then((livro) => {
+      prepararEdicao(
+        livro.id,
+        livro.titulo,
+        livro.anoPublicacao,
+        livro.isbn,
+        livro.status,
+        livro.idAutor,
+      );
     });
+}
+
+function prepararEdicao(id, titulo, ano, isbn, status, idAutor) {
+  inputId.value = id;
+  inputTitulo.value = titulo;
+  inputAno.value = ano;
+  inputIsbn.value = isbn;
+  inputStatus.value = status;
+  selectAutor.value = idAutor;
 }
 
 function carregarAutores() {
@@ -87,15 +111,6 @@ function cadastrarLivro(livro) {
   });
 }
 
-function prepararEdicao(id, titulo, ano, isbn, status, idAutor) {
-  inputId.value = id;
-  inputTitulo.value = titulo;
-  inputAno.value = ano;
-  inputIsbn.value = isbn;
-  inputStatus.value = status;
-  selectAutor.value = idAutor;
-}
-
 function atualizarLivro(id, livro) {
   fetch(`${API_URL}?id=${id}`, {
     method: "PUT",
@@ -109,8 +124,9 @@ function atualizarLivro(id, livro) {
 
 function excluirLivro(id) {
   if (!confirm("Deseja excluir este livro?")) return;
+
   fetch(`${API_URL}?id=${id}`, { method: "DELETE" }).then(() =>
-    carregarLivros()
+    carregarLivros(),
   );
 }
 

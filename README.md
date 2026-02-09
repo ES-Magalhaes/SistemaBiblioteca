@@ -118,7 +118,7 @@ CREATE TABLE livros (
 - Excluir autor
 
 ### 📗 Livros
-![Autores](assets/imgautores.png)
+![Autores](assets/imglivros.png)
 - Cadastrar livro
 - Listar livros
 - Editar livro

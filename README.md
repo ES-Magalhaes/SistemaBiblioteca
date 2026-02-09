@@ -77,6 +77,10 @@ SistemaBiblioteca/
 │   ├── livros.html
 │   └── index.html
 ├── .gitignore
+├── assets/
+│   ├── imgautores.png
+│   ├── imglivros.png
+│   └── imgtitulo.png
 └── README.md
 ```
 
@@ -107,14 +111,14 @@ CREATE TABLE livros (
 ```
 ## 🖥️ Funcionalidades
 ### 📘 Autores
-
+![Autores](assets/imgautores.png)
 - Cadastrar autor
 - Listar autores
 - Editar autor
 - Excluir autor
 
 ### 📗 Livros
-
+![Autores](assets/imgautores.png)
 - Cadastrar livro
 - Listar livros
 - Editar livro
